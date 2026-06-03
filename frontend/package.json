@@ -1,0 +1,29 @@
+{
+  "name": "pharmacy-pos-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "caniuse-lite": "^1.0.30001793",
+    "framer-motion": "^12.16.0",
+    "lodash": "^4.18.1",
+    "lucide-react": "^0.513.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-is": "^19.2.6",
+    "react-router-dom": "^7.6.2",
+    "recharts": "^2.15.3",
+    "victory-vendor": "^37.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.8",
+    "@vitejs/plugin-react": "^4.5.2",
+    "tailwindcss": "^4.1.8",
+    "vite": "^6.3.5"
+  }
+}
