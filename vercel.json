@@ -15,9 +15,6 @@
       "dest": "frontend/dist/index.html",
       "status": 200
     }
-  ],
-  "env": {
-    "VITE_API_BASE": "@api_base"
-  }
+  ]
 }
 
