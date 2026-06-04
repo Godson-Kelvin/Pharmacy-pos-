@@ -118,24 +118,6 @@ pos--c/
 | POST   | /api/products         | Create product       |
 | PUT    | /api/products/:id     | Update product       |
 | DELETE | /api/products/:id     | Delete product       |
-
-## Deploy to Render
-
-This project is configured for Render with separate frontend, backend, and PostgreSQL services.
-
-- `pharmacy-pos-backend` — Node web service for the API
-- `pharmacy-pos-frontend` — Static site for the React app
-- `pharmacy-pos-db` — PostgreSQL database service
-
-Render will build the frontend from `frontend/` and the backend from `backend/`.
-
-### What to change after deployment
-
-- Set a secure `JWT_SECRET` in Render environment variables for `pharmacy-pos-backend`
-- Confirm `DATABASE_URL` is connected to `pharmacy-pos-db`
-- Use the Render service URLs for custom domains if needed
-
-If you want, I can also add a sample `backend/.env.example` entry for local Render-like settings.
 | POST   | /api/products/import  | Import CSV           |
 | GET    | /api/sales            | List sales           |
 | POST   | /api/sales            | Create sale          |
@@ -145,3 +127,24 @@ If you want, I can also add a sample `backend/.env.example` entry for local Rend
 ## License
 
 MIT
+
+## Deploy to Railway
+
+You can deploy this monorepo to Railway with a PostgreSQL plugin, a backend service, and a frontend service.
+
+1. Push your repo to GitHub.
+2. On Railway (https://railway.app) click **New Project** → **Deploy from GitHub** and select this repository.
+3. Add a PostgreSQL plugin (note the `DATABASE_URL`).
+4. Create a backend service:
+	- Root directory: `backend`
+	- Build command: `npm install`
+	- Start command: `npm start`
+	- Environment variables: `DATABASE_URL`, `JWT_SECRET` (add a secure value), `CLIENT_ORIGIN` (frontend URL)
+5. Create a frontend static service:
+	- Root directory: `frontend`
+	- Build command: `npm install && npm run build`
+	- Publish directory: `frontend/dist`
+	- Set `VITE_API_BASE` to your backend URL plus `/api`
+6. Set secrets and env vars in the Railway project settings, then trigger deployment.
+
+After deployments complete, Railway will provide service URLs for frontend and backend. Use those URLs in your app configuration.
