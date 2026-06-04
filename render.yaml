@@ -1,0 +1,33 @@
+services:
+  - type: web_service
+    name: pharmacy-pos-backend
+    env: node
+    branch: main
+    buildCommand: npm install --prefix backend
+    startCommand: npm --prefix backend start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_ORIGIN
+        value: https://pharmacy-pos-frontend.onrender.com
+      - key: JWT_SECRET
+        value: render-secret-placeholder
+      - key: DATABASE_URL
+        fromDatabase: pharmacy-pos-db
+  - type: static_site
+    name: pharmacy-pos-frontend
+    branch: main
+    buildCommand: npm install --prefix frontend && npm --prefix frontend run build
+    publishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE
+        value: https://pharmacy-pos-backend.onrender.com/api
+
+databases:
+  - name: pharmacy-pos-db
+    plan: starter
+    databaseName: pharmacy_pos
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: pharmacy-pos-db

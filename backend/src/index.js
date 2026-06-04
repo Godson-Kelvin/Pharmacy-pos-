@@ -1,11 +1,37 @@
 import express from 'express';
-import app from './app.js';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js';
+import productRoutes from './routes/products.js';
+import salesRoutes from './routes/sales.js';
 
-const server = express();
-server.use('/api', app);
+dotenv.config();
 
+const app = express();
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
+const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
+const corsOptions = {
+  origin: [clientOrigin],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', message: 'Pharmacy POS API is running' });
+});
+
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/sales', salesRoutes);
+
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
+app.listen(PORT, () => {
   console.log(`Pharmacy POS API running on http://localhost:${PORT}`);
 });

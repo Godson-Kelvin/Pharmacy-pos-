@@ -118,6 +118,24 @@ pos--c/
 | POST   | /api/products         | Create product       |
 | PUT    | /api/products/:id     | Update product       |
 | DELETE | /api/products/:id     | Delete product       |
+
+## Deploy to Render
+
+This project is configured for Render with separate frontend, backend, and PostgreSQL services.
+
+- `pharmacy-pos-backend` — Node web service for the API
+- `pharmacy-pos-frontend` — Static site for the React app
+- `pharmacy-pos-db` — PostgreSQL database service
+
+Render will build the frontend from `frontend/` and the backend from `backend/`.
+
+### What to change after deployment
+
+- Set a secure `JWT_SECRET` in Render environment variables for `pharmacy-pos-backend`
+- Confirm `DATABASE_URL` is connected to `pharmacy-pos-db`
+- Use the Render service URLs for custom domains if needed
+
+If you want, I can also add a sample `backend/.env.example` entry for local Render-like settings.
 | POST   | /api/products/import  | Import CSV           |
 | GET    | /api/sales            | List sales           |
 | POST   | /api/sales            | Create sale          |
