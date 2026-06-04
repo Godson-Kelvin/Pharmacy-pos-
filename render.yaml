@@ -1,6 +1,8 @@
 services:
-  - name: pharmacy-pos-backend
-    env: node
+  - type: web_service
+    name: pharmacy-pos-backend
+    runtime: node
+    plan: starter
     branch: main
     buildCommand: npm install --prefix backend
     startCommand: npm --prefix backend start
@@ -13,10 +15,12 @@ services:
       - key: JWT_SECRET
         value: render-secret-placeholder
       - key: DATABASE_URL
-        fromDatabase: pharmacy-pos-db
+        fromDatabase:
+          name: pharmacy-pos-db
+          property: connectionString
 
-  - name: pharmacy-pos-frontend
-    env: static
+  - type: static_site
+    name: pharmacy-pos-frontend
     branch: main
     buildCommand: npm install --prefix frontend && npm --prefix frontend run build
     staticPublishPath: frontend/dist
@@ -26,5 +30,5 @@ services:
 
 databases:
   - name: pharmacy-pos-db
-    plan: starter
     databaseName: pharmacy_pos
+    plan: starter
