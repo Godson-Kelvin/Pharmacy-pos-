@@ -128,7 +128,7 @@ pos--c/
 
 MIT
 
-## Deploy to Railway
+## Deployment
 
 You can deploy this monorepo to Railway with a PostgreSQL plugin, a backend service, and a frontend service.
 
@@ -147,4 +147,4 @@ You can deploy this monorepo to Railway with a PostgreSQL plugin, a backend serv
 	- Set `VITE_API_BASE` to your backend URL plus `/api`
 6. Set secrets and env vars in the Railway project settings, then trigger deployment.
 
-After deployments complete, Railway will provide service URLs for frontend and backend. Use those URLs in your app configuration.
+After deployments complete, your deployment platform will provide service URLs for frontend and backend. Use those URLs in your app configuration.
