@@ -1,4 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_BASE || (import.meta.env.DEV ? 'http://localhost:5000' : '/api');
+// In dev, Vite proxies /api to http://localhost:5000 (see vite.config.js),
+// so the frontend can use the same /api base everywhere — no CORS in dev either.
+// In production (Vercel), the serverless function is at /api on the same origin.
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 async function request(path, options = {}) {
   const headers = { ...options.headers };

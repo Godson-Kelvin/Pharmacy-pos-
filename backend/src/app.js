@@ -9,8 +9,24 @@ dotenv.config();
 
 const app = express();
 
+// CORS: when deployed on Vercel the frontend and backend are on the same
+// origin, so CORS doesn't apply. In dev / split deployments, allow the
+// origins listed in CLIENT_ORIGIN (comma-separated) plus localhost defaults.
+const defaultOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+const configuredOrigins = (process.env.CLIENT_ORIGIN || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+const allowedOrigins = [...new Set([...defaultOrigins, ...configuredOrigins])];
+
 const corsOptions = {
-  origin: ['http://localhost:5173'],
+  origin: (origin, callback) => {
+    // Allow same-origin / curl / server-to-server (no Origin header).
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS: origin ${origin} not allowed`));
+  },
   credentials: true,
 };
 

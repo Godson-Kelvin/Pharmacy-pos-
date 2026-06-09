@@ -130,6 +130,27 @@ MIT
 
 ## Deployment
 
+### Vercel (recommended)
+
+This monorepo deploys both the frontend and the backend as a single Vercel project. The frontend is built as a static site from `frontend/`, and the backend runs as a serverless function exposed at `/api` (entry point: `api/index.js`, which re-exports the Express app from `backend/src/app.js`).
+
+1. Push your repo to GitHub.
+2. On Vercel (https://vercel.com) click **Add New → Project** and import this repository. Vercel auto-detects the static build and the `/api` serverless function.
+3. In **Project Settings → Environment Variables**, add:
+   - `DATABASE_URL` — connection string to a PostgreSQL database reachable from Vercel (e.g. Neon, Supabase, Railway, or Vercel Postgres). Format: `postgresql://user:password@host:5432/dbname?schema=public`
+   - `JWT_SECRET` — a long random string
+   - `CLIENT_ORIGIN` — *(optional, only needed for split deployments)* comma-separated list of allowed origins
+4. **Important:** Vercel does not provide a database. You must run the Prisma migrations and seed from your local machine using the production `DATABASE_URL` before the first deploy:
+   ```bash
+   # locally, with backend/.env pointing at the production DB:
+   npm run db:setup
+   ```
+5. Trigger a deployment. After it completes, your app is reachable at `https://<your-project>.vercel.app`, and the API at `https://<your-project>.vercel.app/api/...`.
+
+Demo accounts after seeding: `admin@pharmacy.gh` / `admin123` and `cashier@pharmacy.gh` / `cashier123`.
+
+### Railway (alternative)
+
 You can deploy this monorepo to Railway with a PostgreSQL plugin, a backend service, and a frontend service.
 
 1. Push your repo to GitHub.
@@ -146,5 +167,3 @@ You can deploy this monorepo to Railway with a PostgreSQL plugin, a backend serv
 	- Publish directory: `frontend/dist`
 	- Set `VITE_API_BASE` to your backend URL plus `/api`
 6. Set secrets and env vars in the Railway project settings, then trigger deployment.
-
-After deployments complete, your deployment platform will provide service URLs for frontend and backend. Use those URLs in your app configuration.
