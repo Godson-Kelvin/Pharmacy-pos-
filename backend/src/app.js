@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
 import salesRoutes from './routes/sales.js';
+import prisma from './lib/prisma.js';
 
 dotenv.config();
 
@@ -33,8 +34,27 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', message: 'Pharmacy POS API is running' });
+app.get('/health', async (_req, res) => {
+  // Liveness: the function is up and responding.
+  // Readiness: try a cheap DB round-trip so misconfiguration is visible.
+  const result = { status: 'ok', message: 'Pharmacy POS API is running', db: 'unknown' };
+  try {
+    if (!process.env.DATABASE_URL) {
+      result.db = 'not_configured';
+      result.dbError = 'DATABASE_URL env var is missing';
+      return res.status(503).json(result);
+    }
+    await prisma.$queryRaw`SELECT 1`;
+    result.db = 'ok';
+    res.json(result);
+  } catch (err) {
+    result.status = 'degraded';
+    result.db = 'error';
+    // Surface the real Prisma/connection error so it shows up in Vercel logs.
+    result.dbError = err.message;
+    console.error('[health] DB check failed:', err);
+    res.status(503).json(result);
+  }
 });
 
 app.use('/auth', authRoutes);

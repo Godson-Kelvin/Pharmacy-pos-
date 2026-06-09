@@ -146,6 +146,7 @@ This monorepo deploys both the frontend and the backend as a single Vercel proje
    npm run db:setup
    ```
 5. Trigger a deployment. After it completes, your app is reachable at `https://<your-project>.vercel.app`, and the API at `https://<your-project>.vercel.app/api/...`.
+6. **Verify the DB link** by opening `https://<your-project>.vercel.app/api/health` in your browser. You should see `{"status":"ok","db":"ok",...}`. If `db` is `"error"`, the response's `dbError` field will contain the real Prisma/Supabase error (also visible in **Vercel → Logs**). Common causes: wrong Supabase password, used the direct connection instead of the transaction pooler, or the Supabase project is paused.
 
 Demo accounts after seeding: `admin@pharmacy.gh` / `admin123` and `cashier@pharmacy.gh` / `cashier123`.
 
